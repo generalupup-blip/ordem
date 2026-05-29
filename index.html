@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIMEP • Chamado Técnico com Ciência</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f17;
+            --surface: #131a24;
+            --surface2: #1a2230;
+            --border: #252d3a;
+            --text: #e6ecf3;
+            --text2: #9aa7b8;
+            --accent: #f0b429;
+            --accent-glow: rgba(240, 180, 41, 0.25);
+            --danger: #f87171;
+            --success: #34d399;
+            --radius: 18px;
+            --radius-sm: 12px;
+            --transition: 0.2s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-image: radial-gradient(ellipse at 20% 10%, #1a2332 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, #141e2b 0%, transparent 60%);
+        }
+        .app { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* HEADER */
+        .app-header {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon {
+            width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent), #e6a819);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: 900; color: #0b0f17; box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .logo h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+        .logo span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 0.82rem;
+            letter-spacing: 0.03em; cursor: pointer; border: 1px solid transparent;
+            transition: var(--transition); font-family: 'Inter', sans-serif;
+            display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: transparent;
+        }
+        .btn-accent { background: var(--accent); color: #0b0f17; border-color: var(--accent); font-weight: 700; box-shadow: 0 4px 18px var(--accent-glow); }
+        .btn-accent:hover { background: #f7c144; transform: translateY(-1px); }
+        .btn-ghost { border-color: var(--border); color: var(--text2); }
+        .btn-ghost:hover { background: var(--surface2); color: #fff; }
+        .btn-sm { padding: 6px 12px; font-size: 0.72rem; }
+
+        /* TABS */
+        .tab-nav { display: flex; gap: 4px; background: var(--surface); border-radius: 50px; padding: 5px; border: 1px solid var(--border); width: fit-content; }
+        .tab-btn { padding: 10px 22px; border-radius: 50px; border: none; background: transparent; color: var(--text2); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; }
+        .tab-btn.active { background: var(--accent); color: #0b0f17; font-weight: 700; box-shadow: 0 2px 12px var(--accent-glow); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* CARDS */
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+        .card-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .card-title .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-field { display: flex; flex-direction: column; gap: 5px; }
+        .form-field.full { grid-column: 1 / -1; }
+        .form-field label { font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text2); }
+        .form-field input, .form-field textarea, .form-field select {
+            font-family: 'Inter', sans-serif; font-size: 0.88rem; padding: 10px 14px;
+            border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2);
+            color: #fff; transition: var(--transition); outline: none; width: 100%; resize: vertical;
+        }
+        .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: #1e2736;
+        }
+        .form-field textarea { min-height: 85px; line-height: 1.5; }
+
+        /* TERMO DE CIÊNCIA */
+        .ciencia-texto {
+            background: #1e2a1a; border: 1px solid #2d4a2d; border-radius: var(--radius-sm);
+            padding: 14px 18px; margin: 12px 0 8px; font-size: 0.82rem; line-height: 1.5;
+            color: #cbd5e1; display: flex; align-items: flex-start; gap: 10px;
+        }
+        .ciencia-texto .icon-lock { font-size: 1.2rem; color: var(--success); margin-top: 2px; }
+        .ciencia-texto strong { color: #fff; }
+
+        /* ASSINATURAS */
+        .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+        .sig-box {
+            border: 2px dashed #374151; border-radius: var(--radius-sm); padding: 14px; text-align: center;
+            background: var(--surface2); transition: var(--transition); min-height: 210px;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .sig-box.signed { border-color: var(--accent); border-style: solid; background: #1a1f1a; box-shadow: 0 0 16px rgba(240,180,41,0.1); }
+        .sig-box canvas { width: 100%; height: 130px; background: #fff; border-radius: 8px; cursor: crosshair; border: 1px solid #444; touch-action: none; }
+        .sig-label { font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); }
+        .sig-name { font-weight: 600; font-size: 0.9rem; color: #fff; }
+        .sig-hint { font-size: 0.68rem; color: #6b7280; }
+        .ciencia-stamp { font-weight: 700; font-size: 0.7rem; color: #34d399; text-transform: uppercase; letter-spacing: 0.06em; display: none; }
+
+        /* TABELA HISTÓRICO */
+        .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .filter-bar input {
+            font-family: 'Inter', sans-serif; padding: 8px 14px; border-radius: 50px;
+            border: 1.5px solid var(--border); background: var(--surface2); color: #fff;
+            font-size: 0.8rem; outline: none; min-width: 150px;
+        }
+        .filter-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: var(--surface2); padding: 10px 12px; text-align: left; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); border-bottom: 2px solid var(--border); }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: #d1d5db; }
+        tr:hover td { background: #1c2532; }
+        .badge { padding: 4px 10px; border-radius: 50px; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; }
+        .badge-ciente { background: #064e3b; color: #6ee7b7; border: 1px solid #065f46; }
+        .badge-pendente { background: #7c2d12; color: #fca5a5; border: 1px solid #9a3412; }
+
+        /* TOAST */
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120px);
+            background: #fff; color: #0b0f17; padding: 12px 28px; border-radius: 50px;
+            font-weight: 700; font-size: 0.85rem; box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 999; transition: transform 0.3s ease; pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media print {
+            body { background: #fff !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .app-header, .tab-nav, .filter-bar, .table-wrap, .btn, .no-print, .toast, #tabHistorico, .card-header .btn, .sig-actions-row { display: none !important; }
+            .app { max-width: 100%; gap: 0; }
+            .card { box-shadow: none; border: none; background: #fff; padding: 5px 10px; border-radius: 0; }
+            .form-field input, .form-field textarea, .form-field select { background: #fff; color: #000; border: 1px solid #ccc; }
+            .sig-box { background: #fff; border: 2px solid #999; min-height: 140px; }
+            .sig-box canvas { border: 1px solid #aaa; background: #fff; height: 90px; }
+            .sig-label, .sig-name, .form-field label, .card-title, .ciencia-texto { color: #000; }
+            .ciencia-texto { background: #f9f9f9; border: 1px solid #ccc; }
+            @page { size: A4; margin: 8mm; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <div><h1>DIMEP</h1><span>Chamados Técnicos</span></div>
+            </div>
+            <button class="btn btn-accent" id="btnNovoChamadoTop">+ Novo Chamado</button>
+        </header>
+
+        <div class="tab-nav no-print">
+            <button class="tab-btn active" data-tab="tabNovo">📝 Novo Chamado</button>
+            <button class="tab-btn" data-tab="tabHistorico">📋 Histórico</button>
+        </div>
+
+        <!-- NOVO CHAMADO -->
+        <div class="tab-content active" id="tabNovo">
+            <div class="card" id="cardChamado">
+                <div class="card-header">
+                    <div class="card-title"><span class="dot"></span> Ordem de Serviço • Ciência do Funcionário</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--accent);font-weight:700;" id="ticketIdDisplay"></div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field"><label>👤 Solicitante (Gestor)</label><input type="text" id="solicitante" placeholder="Nome do gestor responsável"></div>
+                    <div class="form-field"><label>🧑‍🔧 Funcionário</label><input type="text" id="funcionario" placeholder="Nome do funcionário que executará"></div>
+                    <div class="form-field"><label>📅 Data da Solicitação</label><input type="date" id="dataSolicitacao"></div>
+                    <div class="form-field"><label>⚡ Prioridade</label><select id="prioridade"><option value="Alta">Alta</option><option value="Média" selected>Média</option><option value="Baixa">Baixa</option></select></div>
+                    <div class="form-field full"><label>📋 Descrição do Serviço / Problema</label><textarea id="descricao" placeholder="Detalhe exatamente o que foi solicitado, incluindo padrões de qualidade e prazos..."></textarea></div>
+                </div>
+
+                <!-- TEXTO DE CIÊNCIA (aparece no PDF) -->
+                <div class="ciencia-texto" id="cienciaTexto">
+                    <span class="icon-lock">🔒</span>
+                    <span><strong>DECLARAÇÃO DE CIÊNCIA DO FUNCIONÁRIO:</strong> O funcionário <strong id="nomeFuncCiencia">_________________</strong> declara estar plenamente ciente de todas as condições, especificações técnicas e prazos descritos nesta Ordem de Serviço. A assinatura abaixo confirma o recebimento das instruções e o compromisso com a execução conforme o padrão de qualidade exigido pelo solicitante.</span>
+                </div>
+
+                <div class="sig-row">
+                    <div class="sig-box" id="sigBoxSolicitante">
+                        <span class="sig-label">Assinatura do Solicitante</span>
+                        <span class="sig-name" id="sigNomeSolicitante">_________________</span>
+                        <canvas id="canvasSolicitante" width="350" height="130"></canvas>
+                        <span class="sig-hint">Desenhe com mouse ou toque</span>
+                        <button class="btn btn-ghost btn-sm sig-clear" data-canvas="canvasSolicitante">✕ Limpar</button>
+                    </div>
+                    <div class="sig-box" id="sigBoxFuncionario">
+                        <span class="sig-label">Assinatura do Funcionário (CIÊNCIA)</span>
+                        <span class="sig-name" id="sigNomeFuncionario">_________________</span>
+                        <canvas id="canvasFuncionario" width="350" height="130"></canvas>
+                        <span class="sig-hint">Assine para confirmar a ciência</span>
+                        <button class="btn btn-ghost btn-sm sig-clear" data-canvas="canvasFuncionario">✕ Limpar</button>
+                        <div class="ciencia-stamp" id="cienciaStamp">✓ CIENTE – Qualidade Confirmada</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;" class="no-print sig-actions-row">
+                    <button class="btn btn-ghost" id="btnLimparForm">🧹 Limpar</button>
+                    <button class="btn btn-accent" id="btnSalvarGerar">💾 Salvar & Gerar PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTÓRICO -->
+        <div class="tab-content" id="tabHistorico">
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span class="dot"></span> Histórico de Chamados</div></div>
+                <div class="filter-bar no-print">
+                    <input type="text" id="filtroNome" placeholder="🔍 Nome...">
+                    <input type="date" id="filtroDataInicio" title="De">
+                    <input type="date" id="filtroDataFim" title="Até">
+                    <input type="text" id="filtroProblema" placeholder="🔍 Problema...">
+                    <button class="btn btn-ghost btn-sm" id="btnLimparFiltros">Limpar</button>
+                </div>
+                <div class="table-wrap">
+                    <table><thead><tr><th>ID</th><th>Data</th><th>Solicitante</th><th>Funcionário</th><th>Problema</th><th>Status</th><th class="no-print">Ações</th></tr></thead>
+                        <tbody id="historicoTableBody"></tbody></table>
+                </div>
+                <div id="semRegistros" style="text-align:center;padding:30px;color:var(--text2);display:none;">Nenhum chamado.</div>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+            // ---- DADOS ----
+            const STORAGE = 'dimep_chamados_v3';
+            let chamados = JSON.parse(localStorage.getItem(STORAGE) || '[]');
+            let currentId = null;
+            let sigSol, sigFunc; // assinaturas
+
+            // ---- ELEMENTOS ----
+            const $ = (id) => document.getElementById(id);
+            const ticketDisplay = $('ticketIdDisplay');
+            const solicInput = $('solicitante'), funcInput = $('funcionario'), dataInput = $('dataSolicitacao');
+            const priorSelect = $('prioridade'), descText = $('descricao');
+            const nomeSol = $('sigNomeSolicitante'), nomeFunc = $('sigNomeFuncionario');
+            const canvasSol = $('canvasSolicitante'), canvasFunc = $('canvasFuncionario');
+            const boxSol = $('sigBoxSolicitante'), boxFunc = $('sigBoxFuncionario');
+            const stampCiencia = $('cienciaStamp');
+            const tableBody = $('historicoTableBody'), semReg = $('semRegistros');
+            const toast = $('toast');
+            const nomeFuncCiencia = $('nomeFuncCiencia');
+
+            function salvarStorage() { localStorage.setItem(STORAGE, JSON.stringify(chamados)); }
+            function gerarId() { return `DMP-${new Date().getFullYear()}-${String(chamados.length + 1).padStart(4, '0')}`; }
+            function formatData(d) { if(!d) return ''; const [a,m,dia] = d.split('-'); return `${dia}/${m}/${a}`; }
+
+            // ---- ASSINATURA ----
+            function setupCanvas(canvas, box, stampEl) {
+                const ctx = canvas.getContext('2d');
+                let drawing = false, drawn = false;
+
+                function pos(e) {
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = canvas.width / rect.width;
+                    const scaleY = canvas.height / rect.height;
+                    let cx = e.clientX, cy = e.clientY;
+                    if (e.touches && e.touches.length) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+                    if (e.changedTouches && e.changedTouches.length) { cx = e.changedTouches[0].clientX; cy = e.changedTouches[0].clientY; }
+                    return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+                }
+
+                function start(e) { e.preventDefault(); drawing = true; drawn = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); box.classList.add('signed'); if(stampEl) stampEl.style.display = 'block'; }
+                function move(e) { if (!drawing) return; e.preventDefault(); const p = pos(e); ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#0b0f17'; ctx.lineTo(p.x, p.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+                function end() { drawing = false; ctx.beginPath(); }
+
+                canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move);
+                canvas.addEventListener('mouseup', end); canvas.addEventListener('mouseleave', end);
+                canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', move, {passive: false});
+                canvas.addEventListener('touchend', end); canvas.addEventListener('touchcancel', end);
+
+                return {
+                    clear() { ctx.clearRect(0,0,canvas.width,canvas.height); drawn=false; box.classList.remove('signed'); if(stampEl) stampEl.style.display = 'none'; },
+                    hasSignature() { return drawn; },
+                    getDataURL() { return canvas.toDataURL('image/png'); },
+                    setDataURL(url) {
+                        const img = new Image(); img.onload = () => { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0,canvas.width,canvas.height); drawn=true; box.classList.add('signed'); if(stampEl) stampEl.style.display='block'; };
+                        img.src = url;
+                    }
+                };
+            }
+
+            sigSol = setupCanvas(canvasSol, boxSol, null);
+            sigFunc = setupCanvas(canvasFunc, boxFunc, stampCiencia);
+
+            document.querySelectorAll('.sig-clear').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (btn.dataset.canvas === 'canvasSolicitante') sigSol.clear();
+                    if (btn.dataset.canvas === 'canvasFuncionario') sigFunc.clear();
+                });
+            });
+
+            // ---- ATUALIZAR NOMES ----
+            function atualizarNomes() {
+                nomeSol.textContent = solicInput.value || '_________________';
+                nomeFunc.textContent = funcInput.value || '_________________';
+                nomeFuncCiencia.textContent = funcInput.value || '_________________';
+            }
+            solicInput.addEventListener('input', atualizarNomes);
+            funcInput.addEventListener('input', atualizarNomes);
+
+            // ---- RESETAR FORM ----
+            function resetForm() {
+                currentId = null;
+                ticketDisplay.textContent = gerarId();
+                solicInput.value = ''; funcInput.value = '';
+                dataInput.value = new Date().toISOString().split('T')[0];
+                priorSelect.value = 'Média'; descText.value = '';
+                sigSol.clear(); sigFunc.clear();
+                atualizarNomes();
+            }
+            resetForm();
+
+            // ---- SALVAR & PDF ----
+            $('btnSalvarGerar').addEventListener('click', () => {
+                if (!solicInput.value.trim() || !funcInput.value.trim() || !descText.value.trim()) {
+                    return mostrarToast('⚠️ Preencha solicitante, funcionário e descrição.');
+                }
+                if (!sigFunc.hasSignature()) {
+                    if (!confirm('Funcionário ainda não assinou a ciência. Deseja continuar?')) return;
+                }
+                const chamado = {
+                    id: currentId || gerarId(),
+                    data: dataInput.value,
+                    solicitante: solicInput.value.trim(),
+                    funcionario: funcInput.value.trim(),
+                    descricao: descText.value.trim(),
+                    prioridade: priorSelect.value,
+                    status: sigFunc.hasSignature() ? 'ciente' : 'pendente',
+                    assSol: sigSol.hasSignature() ? sigSol.getDataURL() : null,
+                    assFunc: sigFunc.hasSignature() ? sigFunc.getDataURL() : null
+                };
+                if (currentId) {
+                    const idx = chamados.findIndex(c => c.id === currentId);
+                    if (idx >= 0) chamados[idx] = chamado;
+                } else {
+                    chamados.unshift(chamado);
+                }
+                salvarStorage();
+                renderHistorico();
+                currentId = chamado.id;
+                ticketDisplay.textContent = chamado.id;
+                mostrarToast('✅ Salvo. Gerando PDF...');
+                setTimeout(() => window.print(), 300);
+            });
+
+            $('btnLimparForm').addEventListener('click', () => { resetForm(); mostrarToast('🧹 Limpo.'); });
+
+            // ---- HISTÓRICO ----
+            function renderHistorico() {
+                const fNome = ($('filtroNome').value || '').toLowerCase();
+                const fProb = ($('filtroProblema').value || '').toLowerCase();
+                const dIni = $('filtroDataInicio').value, dFim = $('filtroDataFim').value;
+                let filtrados = chamados.filter(c => {
+                    if (fNome && !(c.solicitante.toLowerCase().includes(fNome) || c.funcionario.toLowerCase().includes(fNome))) return false;
+                    if (fProb && !c.descricao.toLowerCase().includes(fProb)) return false;
+                    if (dIni && c.data < dIni) return false;
+                    if (dFim && c.data > dFim) return false;
+                    return true;
+                });
+                if (filtrados.length === 0) { tableBody.innerHTML = ''; semReg.style.display = 'block'; }
+                else {
+                    semReg.style.display = 'none';
+                    tableBody.innerHTML = filtrados.map(c => `
+                        <tr>
+                            <td style="font-family:'JetBrains Mono',monospace;">${c.id}</td>
+                            <td>${formatData(c.data)}</td>
+                            <td>${c.solicitante}</td>
+                            <td>${c.funcionario}</td>
+                            <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${c.descricao.replace(/"/g,'&quot;')}">${c.descricao}</td>
+                            <td><span class="badge ${c.status==='ciente'?'badge-ciente':'badge-pendente'}">${c.status==='ciente'?'Ciente':'Pendente'}</span></td>
+                            <td class="no-print">
+                                <button class="btn btn-ghost btn-sm btn-editar" data-id="${c.id}">📄 Abrir</button>
+                                <button class="btn btn-ghost btn-sm btn-excluir" data-id="${c.id}" style="color:#f87171;">🗑</button>
+                            </td>
+                        </tr>`).join('');
+                }
+            }
+
+            tableBody.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const id = btn.dataset.id;
+                if (btn.classList.contains('btn-editar')) carregarChamado(id);
+                if (btn.classList.contains('btn-excluir')) excluirChamado(id);
+            });
+
+            function carregarChamado(id) {
+                const c = chamados.find(ch => ch.id === id);
+                if (!c) return;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="tabNovo"]').classList.add('active');
+                $('tabNovo').classList.add('active');
+                $('tabHistorico').classList.remove('active');
+                currentId = c.id;
+                ticketDisplay.textContent = c.id;
+                solicInput.value = c.solicitante;
+                funcInput.value = c.funcionario;
+                dataInput.value = c.data;
+                priorSelect.value = c.prioridade;
+                descText.value = c.descricao;
+                atualizarNomes();
+                sigSol.clear(); sigFunc.clear();
+                if (c.assSol) sigSol.setDataURL(c.assSol);
+                if (c.assFunc) sigFunc.setDataURL(c.assFunc);
+                window.scrollTo({top:0, behavior:'smooth'});
+                mostrarToast(`📂 ${c.id} carregado.`);
+            }
+
+            function excluirChamado(id) {
+                if (!confirm(`Excluir ${id}?`)) return;
+                chamados = chamados.filter(c => c.id !== id);
+                salvarStorage();
+                renderHistorico();
+                if (currentId === id) resetForm();
+                mostrarToast('🗑 Excluído.');
+            }
+
+            ['filtroNome','filtroProblema','filtroDataInicio','filtroDataFim'].forEach(id => {
+                $(id).addEventListener('input', renderHistorico);
+                $(id).addEventListener('change', renderHistorico);
+            });
+            $('btnLimparFiltros').addEventListener('click', () => {
+                ['filtroNome','filtroProblema','filtroDataInicio','filtroDataFim'].forEach(id => $(id).value = '');
+                renderHistorico();
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    $(btn.dataset.tab).classList.add('active');
+                    if (btn.dataset.tab === 'tabHistorico') renderHistorico();
+                });
+            });
+            $('btnNovoChamadoTop').addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="tabNovo"]').classList.add('active');
+                $('tabNovo').classList.add('active');
+                $('tabHistorico').classList.remove('active');
+                resetForm();
+                window.scrollTo({top:0, behavior:'smooth'});
+            });
+
+            function mostrarToast(msg) {
+                toast.textContent = msg; toast.classList.add('show');
+                clearTimeout(toast._t); toast._t = setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+
+            renderHistorico();
+            dataInput.value = new Date().toISOString().split('T')[0];
+        })();
+    </script>
+</body>
+</html>
